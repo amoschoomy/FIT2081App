@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Auto Showroom</string>
+    <string name="maker">Maker</string>
+    <string name="add_new_car">Add New Car</string>
+    <string name="cars_app_amos_choo">Cars App: Amos Choo</string>
+    <string name="_600000">600000</string>
+    <string name="model">Model</string>
+    <string name="price">Price</string>
+    <string name="_2_8">2-8</string>
+    <string name="seats">Seats</string>
+    <string name="color">Color</string>
+    <string name="year">Year</string>
+    <string name="_2021">2021</string>
+    <string name="address">Address</string>
+    <string name="reset">Reset</string>
+</resources>
