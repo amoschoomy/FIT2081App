@@ -165,17 +165,27 @@
 
     <Button
         android:id="@+id/addcar"
-        android:layout_width="414dp"
-        android:layout_height="51dp"
-        android:layout_marginBottom="256dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:onClick="addCar"
         android:text="@string/add_new_car"
+        app:layout_constraintBaseline_toBaselineOf="@+id/reset"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.211"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reset"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintHorizontal_bias="0.82"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/priceno"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.62"
+        android:onClick="resetFieldsAndData"/>
 
     <ImageView
         android:id="@+id/carimage"
@@ -188,4 +198,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/b5c6" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
