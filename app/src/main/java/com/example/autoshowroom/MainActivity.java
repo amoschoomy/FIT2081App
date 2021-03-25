@@ -137,9 +137,4 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
         Toast.makeText(this, "Car maker: " + maker.getText().toString(), Toast.LENGTH_SHORT).show();
     }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-    }
 }
