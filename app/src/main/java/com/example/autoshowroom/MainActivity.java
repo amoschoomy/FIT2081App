@@ -7,77 +7,91 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity {
+    ArrayList<String> arrayList = new ArrayList<String>();
+    ArrayAdapter arrayAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.drawer);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS}, 0);
 
         MyBroadCastReceiver myBroadCastReceiver = new MyBroadCastReceiver();
         registerReceiver(myBroadCastReceiver, new IntentFilter(SMSReceiver.SMS_FILTER));
 
+        DrawerLayout drawer = findViewById(R.id.drawer);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.open_menu, R.string.close_menu);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.navview);
+        navigationView.setNavigationItemSelectedListener(new MyNavigationViewListener());
+
+
+        EditText maker = findViewById(R.id.makertext);
+        EditText model = findViewById(R.id.modeltext);
+
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addCar();
+                arrayList.add(maker.getText().toString() + " " + model.getText().toString());
+                arrayAdapter.notifyDataSetChanged();
+            }
+        });
+
+
+        ListView lw = findViewById(R.id.listview);
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayList);
+        lw.setAdapter(arrayAdapter);
     }
-    class MyBroadCastReceiver extends BroadcastReceiver {
 
-        /*
-         * This method 'onReceive' will get executed every time class SMSReceive sends a broadcast
-         * */
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            /*
-             * Retrieve the message from the intent
-             * */
-            EditText carText,modelText,yearText,colorText,seatsText,priceText;
-            EditText maker = findViewById(R.id.makertext);
-            EditText model = findViewById(R.id.modeltext);
-            EditText year = findViewById(R.id.yeartext);
-            EditText color = findViewById(R.id.colortext);
-            EditText seats = findViewById(R.id.seattext);
-            EditText price = findViewById(R.id.priceno);
-            String msg = intent.getStringExtra(SMSReceiver.SMS_MSG_KEY);
-            /*
-             * String Tokenizer is used to parse the incoming message
-             * The protocol is to have the account holder name and account number separate by a semicolon
-             * */
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-            StringTokenizer sT = new StringTokenizer(msg, ";");
-            String carString= sT.nextToken();
-            String modelString= sT.nextToken();
-            String yearString,colorString,seatsString,priceString;
-            yearString= sT.nextToken();
-            colorString= sT.nextToken();
-            seatsString= sT.nextToken();
-            priceString= sT.nextToken();
-            maker.setText(carString);
-            model.setText(modelString);
-            year.setText(yearString);
-            color.setText(colorString);
-            seats.setText(seatsString);
-            price.setText(priceString);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-//            String accountName = sT.nextToken();
-//            String accountNumber = sT.nextToken();
-            /*
-             * Now, its time to update the UI
-             * */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.clearall:
+                resetFieldsAndData();
+                break;
         }
+        return super.onOptionsItemSelected(item);
     }
 
-    public void resetFieldsAndData(View view) {
+    public void resetFieldsAndData() {
         EditText maker = findViewById(R.id.makertext);
         EditText model = findViewById(R.id.modeltext);
         EditText year = findViewById(R.id.yeartext);
@@ -92,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         seats.setText("");
         price.setText("");
 
-        SharedPreferences.Editor editor=getPreferences(0).edit();
+        SharedPreferences.Editor editor = getPreferences(0).edit();
         editor.clear();
         editor.apply();
     }
@@ -109,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         EditText seats = findViewById(R.id.seattext);
         EditText price = findViewById(R.id.priceno);
 
-        maker.setText(sharedPreferences.getString("maker",""));
+        maker.setText(sharedPreferences.getString("maker", ""));
         model.setText(sharedPreferences.getString("model", ""));
         year.setText(sharedPreferences.getString("year", ""));
         color.setText(sharedPreferences.getString("color", ""));
@@ -119,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void addCar(View view) {
+    public void addCar() {
         EditText maker = findViewById(R.id.makertext);
         EditText model = findViewById(R.id.modeltext);
         EditText year = findViewById(R.id.yeartext);
@@ -135,6 +149,74 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("seats", seats.getText().toString());
         editor.putString("price", price.getText().toString());
         editor.apply();
-        Toast.makeText(this, "Car maker: " + maker.getText().toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Added car: " + maker.getText().toString() + " " + model.getText().toString(), Toast.LENGTH_SHORT).show();
+    }
+
+    class MyBroadCastReceiver extends BroadcastReceiver {
+
+        /*
+         * This method 'onReceive' will get executed every time class SMSReceive sends a broadcast
+         * */
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            /*
+             * Retrieve the message from the intent
+             * */
+            EditText carText, modelText, yearText, colorText, seatsText, priceText;
+            EditText maker = findViewById(R.id.makertext);
+            EditText model = findViewById(R.id.modeltext);
+            EditText year = findViewById(R.id.yeartext);
+            EditText color = findViewById(R.id.colortext);
+            EditText seats = findViewById(R.id.seattext);
+            EditText price = findViewById(R.id.priceno);
+            String msg = intent.getStringExtra(SMSReceiver.SMS_MSG_KEY);
+            /*
+             * String Tokenizer is used to parse the incoming message
+             * The protocol is to have the account holder name and account number separate by a semicolon
+             * */
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+            StringTokenizer sT = new StringTokenizer(msg, ";");
+            String carString = sT.nextToken();
+            String modelString = sT.nextToken();
+            String yearString, colorString, seatsString, priceString;
+            yearString = sT.nextToken();
+            colorString = sT.nextToken();
+            seatsString = sT.nextToken();
+            priceString = sT.nextToken();
+            maker.setText(carString);
+            model.setText(modelString);
+            year.setText(yearString);
+            color.setText(colorString);
+            seats.setText(seatsString);
+            price.setText(priceString);
+        }
+    }
+
+    class MyNavigationViewListener implements NavigationView.OnNavigationItemSelectedListener {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            int id = item.getItemId();
+            switch (id) {
+                case R.id.addcar:
+                    addCar();
+                    EditText maker = findViewById(R.id.makertext);
+                    EditText model = findViewById(R.id.modeltext);
+                    arrayList.add(maker.getText().toString() + " " + model.getText().toString());
+                    arrayAdapter.notifyDataSetChanged();
+                    break;
+                case R.id.removelast:
+                    int index = arrayList.size() - 1;
+                    arrayList.remove(index);
+                    arrayAdapter.notifyDataSetChanged();
+                    break;
+                case R.id.removeall:
+                    arrayList.clear();
+                    arrayAdapter.notifyDataSetChanged();
+            }
+            DrawerLayout drawer = findViewById(R.id.drawer);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+        }
     }
 }

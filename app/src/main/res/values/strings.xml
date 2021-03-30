@@ -13,4 +13,6 @@
     <string name="_2021">2021</string>
     <string name="address">Address</string>
     <string name="reset">Reset</string>
+    <string name="open_menu">Opened Menu</string>
+    <string name="close_menu">Closed Menu</string>
 </resources>
