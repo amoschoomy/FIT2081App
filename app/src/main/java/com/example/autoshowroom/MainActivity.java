@@ -209,10 +209,15 @@ public class MainActivity extends AppCompatActivity {
                     int index = arrayList.size() - 1;
                     arrayList.remove(index);
                     arrayAdapter.notifyDataSetChanged();
+
                     break;
                 case R.id.removeall:
                     arrayList.clear();
                     arrayAdapter.notifyDataSetChanged();
+                case R.id.listall:
+                    Intent myIntent = new Intent(MainActivity.this, ListCars.class);
+                    myIntent.putExtra("data", arrayList);
+                    MainActivity.this.startActivity(myIntent);
             }
             DrawerLayout drawer = findViewById(R.id.drawer);
             drawer.closeDrawer(GravityCompat.START);

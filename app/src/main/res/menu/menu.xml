@@ -10,4 +10,7 @@
     <item
         android:id="@+id/removeall"
         android:title="Remove All Cars" />
+    <item
+        android:id="@+id/listall"
+        android:title="List All Cars" />
 </menu>
