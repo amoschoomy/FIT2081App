@@ -57,13 +57,19 @@ public class MainActivity extends AppCompatActivity {
 
         EditText maker = findViewById(R.id.makertext);
         EditText model = findViewById(R.id.modeltext);
+        EditText year = findViewById(R.id.yeartext);
+        EditText color = findViewById(R.id.colortext);
+        EditText seats = findViewById(R.id.seattext);
+        EditText price = findViewById(R.id.priceno);
 
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addCar();
-                arrayList.add(maker.getText().toString() + " " + model.getText().toString());
+                arrayList.add(maker.getText().toString() + " " + model.getText().toString() + "\n Year: " +
+                        year.getText().toString() + "\n Color: " + color.getText().toString() + "\n Seats: " +
+                        seats.getText().toString() + "\n Price: " + price.getText().toString());
                 arrayAdapter.notifyDataSetChanged();
             }
         });
@@ -202,7 +208,13 @@ public class MainActivity extends AppCompatActivity {
                     addCar();
                     EditText maker = findViewById(R.id.makertext);
                     EditText model = findViewById(R.id.modeltext);
-                    arrayList.add(maker.getText().toString() + " " + model.getText().toString());
+                    EditText year = findViewById(R.id.yeartext);
+                    EditText color = findViewById(R.id.colortext);
+                    EditText seats = findViewById(R.id.seattext);
+                    EditText price = findViewById(R.id.priceno);
+                    arrayList.add(maker.getText().toString() + " " + model.getText().toString() + "\n Year: " +
+                            year.getText().toString() + "\n Color: " + color.getText().toString() + "\n Seats: " +
+                            seats.getText().toString() + "\n Price: " + price.getText().toString());
                     arrayAdapter.notifyDataSetChanged();
                     break;
                 case R.id.removelast:
