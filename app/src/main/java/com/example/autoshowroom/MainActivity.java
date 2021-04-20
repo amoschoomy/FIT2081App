@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -22,18 +21,17 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.autoshowroom.provider.Car;
+import com.example.autoshowroom.provider.CarViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<String> arrayList = new ArrayList<String>();
-    ArrayAdapter arrayAdapter;
-
-
+    private CarViewModel carViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,22 +60,27 @@ public class MainActivity extends AppCompatActivity {
         EditText seats = findViewById(R.id.seattext);
         EditText price = findViewById(R.id.priceno);
 
+        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter();
+
+        carViewModel = new ViewModelProvider(this).get(CarViewModel.class);
+        carViewModel.getAllCars().observe(this, newData -> {
+            recyclerViewAdapter.setCars(newData);
+            recyclerViewAdapter.notifyDataSetChanged();
+        });
+
+
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addCar();
-                arrayList.add(maker.getText().toString() + ";" + model.getText().toString() + ";" +
-                        year.getText().toString() + ";" + color.getText().toString() + ";" +
-                        seats.getText().toString() + ";" + price.getText().toString());
-                arrayAdapter.notifyDataSetChanged();
+
+
             }
         });
 
 
         ListView lw = findViewById(R.id.listview);
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayList);
-        lw.setAdapter(arrayAdapter);
     }
 
     @Override
@@ -147,15 +150,11 @@ public class MainActivity extends AppCompatActivity {
         EditText seats = findViewById(R.id.seattext);
         EditText price = findViewById(R.id.priceno);
 
-        SharedPreferences.Editor editor = getPreferences(0).edit();
-        editor.putString("maker", maker.getText().toString());
-        editor.putString("model", model.getText().toString());
-        editor.putString("year", year.getText().toString());
-        editor.putString("color", color.getText().toString());
-        editor.putString("seats", seats.getText().toString());
-        editor.putString("price", price.getText().toString());
-        editor.apply();
-        Toast.makeText(this, "Added car: " + maker.getText().toString() + " " + model.getText().toString(), Toast.LENGTH_SHORT).show();
+        Car car = new Car(maker.getText().toString(), model.getText().toString(),
+                Integer.parseInt(year.getText().toString()), color.getText().toString(), Integer.parseInt(seats.getText().toString()), Integer.parseInt(price.getText().toString()));
+        carViewModel.insert(car);
+//        Toast.makeText(this, "Added car: " + maker.getText().toString() + " " + model.getText().toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, year.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 
     class MyBroadCastReceiver extends BroadcastReceiver {
@@ -212,24 +211,23 @@ public class MainActivity extends AppCompatActivity {
                     EditText color = findViewById(R.id.colortext);
                     EditText seats = findViewById(R.id.seattext);
                     EditText price = findViewById(R.id.priceno);
-                    arrayList.add(maker.getText().toString() + ";" + model.getText().toString() + ";" +
-                            year.getText().toString() + ";" + color.getText().toString() + ";" +
-                            seats.getText().toString() + ";" + price.getText().toString());
-                    arrayAdapter.notifyDataSetChanged();
+                    Car car = new Car(maker.getText().toString(), model.getText().toString(),
+                            Integer.parseInt(year.getText().toString()), color.getText().toString(), Integer.parseInt(seats.getText().toString()), Integer.parseInt(price.getText().toString()));
+                    carViewModel.insert(car);
+
                     break;
                 case R.id.removelast:
-                    int index = arrayList.size() - 1;
-                    arrayList.remove(index);
-                    arrayAdapter.notifyDataSetChanged();
+
 
                     break;
                 case R.id.removeall:
-                    arrayList.clear();
-                    arrayAdapter.notifyDataSetChanged();
+                    carViewModel.deleteAll();
+                    break;
+
                 case R.id.listall:
                     Intent myIntent = new Intent(MainActivity.this, ListCars.class);
-                    myIntent.putExtra("data", arrayList);
                     MainActivity.this.startActivity(myIntent);
+                    break;
             }
             DrawerLayout drawer = findViewById(R.id.drawer);
             drawer.closeDrawer(GravityCompat.START);
