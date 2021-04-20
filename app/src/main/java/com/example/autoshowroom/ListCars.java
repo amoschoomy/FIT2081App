@@ -26,5 +26,7 @@ public class ListCars extends AppCompatActivity {
         recyclerViewAdapter.setData(arrayList);
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerViewAdapter.notifyDataSetChanged();
+
+
     }
 }

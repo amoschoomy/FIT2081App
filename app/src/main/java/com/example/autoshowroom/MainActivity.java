@@ -67,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 addCar();
-                arrayList.add(maker.getText().toString() + " " + model.getText().toString() + "\n Year: " +
-                        year.getText().toString() + "\n Color: " + color.getText().toString() + "\n Seats: " +
-                        seats.getText().toString() + "\n Price: " + price.getText().toString());
+                arrayList.add(maker.getText().toString() + ";" + model.getText().toString() + ";" +
+                        year.getText().toString() + ";" + color.getText().toString() + ";" +
+                        seats.getText().toString() + ";" + price.getText().toString());
                 arrayAdapter.notifyDataSetChanged();
             }
         });
@@ -212,9 +212,9 @@ public class MainActivity extends AppCompatActivity {
                     EditText color = findViewById(R.id.colortext);
                     EditText seats = findViewById(R.id.seattext);
                     EditText price = findViewById(R.id.priceno);
-                    arrayList.add(maker.getText().toString() + " " + model.getText().toString() + "\n Year: " +
-                            year.getText().toString() + "\n Color: " + color.getText().toString() + "\n Seats: " +
-                            seats.getText().toString() + "\n Price: " + price.getText().toString());
+                    arrayList.add(maker.getText().toString() + ";" + model.getText().toString() + ";" +
+                            year.getText().toString() + ";" + color.getText().toString() + ";" +
+                            seats.getText().toString() + ";" + price.getText().toString());
                     arrayAdapter.notifyDataSetChanged();
                     break;
                 case R.id.removelast:
