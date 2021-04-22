@@ -33,12 +33,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView color = holder.itemView.findViewById(R.id.colorv);
         TextView seats = holder.itemView.findViewById(R.id.seatsv);
         TextView price = holder.itemView.findViewById(R.id.pricev);
-        maker.setText(data.getCarMaker());
-        model.setText(data.getCarModel());
-        year.setText(Integer.toString(data.getYear()));
-        color.setText(data.getColour());
-        seats.setText(Integer.toString(data.getSeats()));
-        price.setText(Integer.toString(data.getPrice()));
+        maker.setText("Maker: " + data.getCarMaker());
+        model.setText("Model: " + data.getCarModel());
+        year.setText("Year " + data.getYear());
+        color.setText("Color: " + data.getColour());
+        seats.setText("Seats " + data.getSeats());
+        price.setText("Price " + data.getPrice());
     }
 
     @Override

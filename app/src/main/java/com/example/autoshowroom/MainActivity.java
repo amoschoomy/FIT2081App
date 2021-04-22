@@ -153,8 +153,7 @@ public class MainActivity extends AppCompatActivity {
         Car car = new Car(maker.getText().toString(), model.getText().toString(),
                 Integer.parseInt(year.getText().toString()), color.getText().toString(), Integer.parseInt(seats.getText().toString()), Integer.parseInt(price.getText().toString()));
         carViewModel.insert(car);
-//        Toast.makeText(this, "Added car: " + maker.getText().toString() + " " + model.getText().toString(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, year.getText().toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Added car: " + maker.getText().toString() + " " + model.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 
     class MyBroadCastReceiver extends BroadcastReceiver {
