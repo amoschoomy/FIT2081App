@@ -19,6 +19,4 @@ public interface CarDao {
 
     @Query("delete FROM car")
     void deleteAllCar();
-
-
 }

@@ -1,5 +1,7 @@
 package com.example.autoshowroom.provider;
 
+import android.provider.BaseColumns;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -8,6 +10,10 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "car")
 public class Car {
+
+    public static final String TABLE_NAME = "car";
+    public static final String COLUMN_ID = BaseColumns._ID;
+
 
     @NonNull
     @ColumnInfo(name = "Model")

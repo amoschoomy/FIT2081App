@@ -20,6 +20,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_layout, parent, false);
+
         return new ViewHolder(v) {
         };
     }
@@ -27,6 +28,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Car data = cars.get(holder.getAdapterPosition());
+
         TextView maker = holder.itemView.findViewById(R.id.makerv);
         TextView model = holder.itemView.findViewById(R.id.modelv);
         TextView year = holder.itemView.findViewById(R.id.yearv);
@@ -39,8 +41,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         color.setText("Color: " + data.getColour());
         seats.setText("Seats " + data.getSeats());
         price.setText("Price " + data.getPrice());
-    }
 
+
+    }
     @Override
     public int getItemCount() {
         if (cars == null) {
@@ -58,7 +61,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            carTv = itemView.findViewById(R.id.makerv);
+
+
         }
     }
 }

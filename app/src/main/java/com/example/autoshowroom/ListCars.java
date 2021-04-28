@@ -13,7 +13,7 @@ public class ListCars extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerViewAdapter recyclerViewAdapter;
     RecyclerView.LayoutManager layoutManager;
-    CarViewModel carViewModel;
+    static CarViewModel carViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

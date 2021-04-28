@@ -30,4 +30,5 @@ public class CarViewModel extends AndroidViewModel {
     public void deleteAll() {
         carRepository.deleteAll();
     }
+
 }

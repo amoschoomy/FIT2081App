@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,11 +26,14 @@ import com.example.autoshowroom.provider.Car;
 import com.example.autoshowroom.provider.CarViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity {
     private CarViewModel carViewModel;
+    DatabaseReference myRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +81,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("fleet/car");
 
-        ListView lw = findViewById(R.id.listview);
     }
 
     @Override
@@ -153,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
         Car car = new Car(maker.getText().toString(), model.getText().toString(),
                 Integer.parseInt(year.getText().toString()), color.getText().toString(), Integer.parseInt(seats.getText().toString()), Integer.parseInt(price.getText().toString()));
         carViewModel.insert(car);
+        myRef.push().setValue(car);
         Toast.makeText(this, "Added car: " + maker.getText().toString() + " " + model.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 
@@ -213,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
                     Car car = new Car(maker.getText().toString(), model.getText().toString(),
                             Integer.parseInt(year.getText().toString()), color.getText().toString(), Integer.parseInt(seats.getText().toString()), Integer.parseInt(price.getText().toString()));
                     carViewModel.insert(car);
+                    myRef.push().setValue(car);
 
                     break;
                 case R.id.removelast:
@@ -221,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.removeall:
                     carViewModel.deleteAll();
+                    myRef.removeValue();
                     break;
 
                 case R.id.listall:
