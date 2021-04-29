@@ -3,7 +3,6 @@ package com.example.autoshowroom.provider;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
@@ -22,54 +21,16 @@ public class MyContentProvider extends ContentProvider {
     public MyContentProvider() {
     }
 
-    private static UriMatcher createUriMatcher() {
-
-        final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        final String authority = CONTENT_AUTHORITY;
-
-        //sUriMatcher will return code 1 if uri like authority/tasks
-        uriMatcher.addURI(authority, Car.TABLE_NAME, MULTIPLE_ROWS_TASKS);
-
-        //sUriMatcher will return code 2 if uri like e.g. authority/tasks/7 (where 7 is id of row in tasks table)
-        uriMatcher.addURI(authority, Car.TABLE_NAME + "/#", SINGLE_ROW_TASKS);
-
-        //sUriMatcher will return code 1 if uri like authority/users
-        uriMatcher.addURI(authority, "users", MULTIPLE_ROWS_USERS);
-
-        //sUriMatcher will return code 2 if uri like e.g. authority/users/7 (where 7 is id of row in users table)
-        uriMatcher.addURI(authority, "users" + "/#", SINGLE_ROW_USERS);
-
-        return uriMatcher;
-    }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         // Implement this to handle requests to delete one or more rows.
         int deletionCount;
-        int uriType = createUriMatcher().match(uri);
         deletionCount = db
                 .getOpenHelper()
                 .getWritableDatabase()
                 .delete(Car.TABLE_NAME, selection, selectionArgs);
-        switch (uriType) {
-            case MULTIPLE_ROWS_TASKS: //no trailing row id so selection may indicate more than 1 row needs to be deleted if they can be found
-                deletionCount = db
-                        .getOpenHelper()
-                        .getWritableDatabase()
-                        .delete(Car.TABLE_NAME, selection, selectionArgs);
-                break;
-            case SINGLE_ROW_TASKS: //trailing row id, so just one row to be deleted if it can be found
-                String id = uri.getLastPathSegment();
-                String selectionId = Car.COLUMN_ID + " = ?";
-                String[] selectionArgsId = {String.valueOf(id)};
-                deletionCount = db
-                        .getOpenHelper()
-                        .getWritableDatabase()
-                        .delete(Car.TABLE_NAME, selectionId, selectionArgsId);
-                break;
-            default:
-//                throw new IllegalArgumentException("Unknown URI: " + uri);
-        }
+
         return deletionCount;
     }
 
