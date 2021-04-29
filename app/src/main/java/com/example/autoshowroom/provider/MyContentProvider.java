@@ -68,7 +68,7 @@ public class MyContentProvider extends ContentProvider {
                         .delete(Car.TABLE_NAME, selectionId, selectionArgsId);
                 break;
             default:
-                throw new IllegalArgumentException("Unknown URI: " + uri);
+//                throw new IllegalArgumentException("Unknown URI: " + uri);
         }
         return deletionCount;
     }
