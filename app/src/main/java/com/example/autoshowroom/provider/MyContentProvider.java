@@ -12,10 +12,6 @@ import androidx.room.RoomDatabase;
 public class MyContentProvider extends ContentProvider {
     public static final String CONTENT_AUTHORITY = "fit2081.app.AMOS/tasks";
     public static final Uri CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-    private static final int MULTIPLE_ROWS_TASKS = 1;
-    private static final int SINGLE_ROW_TASKS = 2;
-    private static final int MULTIPLE_ROWS_USERS = 3;
-    private static final int SINGLE_ROW_USERS = 4;
     RoomDatabase db;
 
     public MyContentProvider() {

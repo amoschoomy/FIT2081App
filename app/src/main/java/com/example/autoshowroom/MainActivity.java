@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -34,6 +36,8 @@ import java.util.StringTokenizer;
 public class MainActivity extends AppCompatActivity {
     private CarViewModel carViewModel;
     DatabaseReference myRef;
+    int x, y;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,13 +58,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = findViewById(R.id.navview);
         navigationView.setNavigationItemSelectedListener(new MyNavigationViewListener());
 
-
-        EditText maker = findViewById(R.id.makertext);
-        EditText model = findViewById(R.id.modeltext);
-        EditText year = findViewById(R.id.yeartext);
-        EditText color = findViewById(R.id.colortext);
-        EditText seats = findViewById(R.id.seattext);
-        EditText price = findViewById(R.id.priceno);
 
         RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter();
 
@@ -85,6 +82,34 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference("fleet/car");
 
+
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintlayout);
+        constraintLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                int action = motionEvent.getActionMasked();
+                switch (action) {
+                    case (MotionEvent.ACTION_DOWN):
+                        x = (int) motionEvent.getX();
+                        y = (int) motionEvent.getY();
+                        return true;
+                    case (MotionEvent.ACTION_UP):
+                        if (Math.abs(y - motionEvent.getY()) < 400) {
+                            if (x - motionEvent.getX() < 0) {//left to right
+                                addCar();
+                            }
+                        } else if (Math.abs(x - motionEvent.getX()) < 400) {
+                            if (y - motionEvent.getY() < 0) {
+                                resetFieldsAndData();
+                            }
+                        }
+                    case (MotionEvent.ACTION_MOVE):
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
     }
 
     @Override
