@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -88,21 +89,38 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 int action = motionEvent.getActionMasked();
+
                 switch (action) {
                     case (MotionEvent.ACTION_DOWN):
                         x = (int) motionEvent.getX();
                         y = (int) motionEvent.getY();
+                        EditText price = findViewById(R.id.priceno);
+                        if (motionEvent.getX() <= 50 && motionEvent.getY() <= 200) {
+                            if (!price.getText().toString().equals("")) {
+                                if (Integer.parseInt(price.getText().toString()) - 50 < 0) {
+                                    price.setText("0");
+                                } else {
+                                    price.setText(Integer.toString(Integer.parseInt(price.getText().toString()) - 50));
+                                }
+                            }
+                        } else if (Math.abs(motionEvent.getX() - Resources.getSystem().getDisplayMetrics().widthPixels) <= 50 && motionEvent.getY() <= 200) {
+                            if (!price.getText().toString().equals("")) {
+                                price.setText(Integer.toString(Integer.parseInt(price.getText().toString()) + 50));
+                            }
+                        }
+//
                         return true;
                     case (MotionEvent.ACTION_UP):
-                        if (Math.abs(y - motionEvent.getY()) < 400) {
+                        if (Math.abs(y - motionEvent.getY()) < 40) {
                             if (x - motionEvent.getX() < 0) {//left to right
                                 addCar();
                             }
-                        } else if (Math.abs(x - motionEvent.getX()) < 400) {
-                            if (y - motionEvent.getY() < 0) {
+                        } else if (Math.abs(x - motionEvent.getX()) < 40) {
+                            if (y - motionEvent.getY() < 0) { // top to bottom
                                 resetFieldsAndData();
                             }
                         }
+                        return true;
                     case (MotionEvent.ACTION_MOVE):
                         return true;
                     default:
@@ -178,12 +196,13 @@ public class MainActivity extends AppCompatActivity {
         EditText color = findViewById(R.id.colortext);
         EditText seats = findViewById(R.id.seattext);
         EditText price = findViewById(R.id.priceno);
-
-        Car car = new Car(maker.getText().toString(), model.getText().toString(),
-                Integer.parseInt(year.getText().toString()), color.getText().toString(), Integer.parseInt(seats.getText().toString()), Integer.parseInt(price.getText().toString()));
-        carViewModel.insert(car);
-        myRef.push().setValue(car);
-        Toast.makeText(this, "Added car: " + maker.getText().toString() + " " + model.getText().toString(), Toast.LENGTH_SHORT).show();
+        if (!(year.getText().toString().equals("") || seats.getText().toString().equals("") || price.getText().toString().equals(""))) {
+            Car car = new Car(maker.getText().toString(), model.getText().toString(),
+                    Integer.parseInt(year.getText().toString()), color.getText().toString(), Integer.parseInt(seats.getText().toString()), Integer.parseInt(price.getText().toString()));
+            carViewModel.insert(car);
+            myRef.push().setValue(car);
+            Toast.makeText(this, "Added car: " + maker.getText().toString() + " " + model.getText().toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     class MyBroadCastReceiver extends BroadcastReceiver {
