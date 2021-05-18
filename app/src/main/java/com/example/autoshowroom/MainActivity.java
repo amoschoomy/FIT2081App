@@ -145,6 +145,27 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
+  protected void onPause() {
+
+    EditText maker = findViewById(R.id.makertext);
+    EditText model = findViewById(R.id.modeltext);
+    EditText year = findViewById(R.id.yeartext);
+    EditText color = findViewById(R.id.colortext);
+    EditText price = findViewById(R.id.priceno);
+
+    EditText seats = findViewById(R.id.seattext);
+    super.onPause();
+    SharedPreferences.Editor editor = getPreferences(0).edit();
+    editor.putString("maker", maker.getText().toString());
+    editor.putString("model", model.getText().toString());
+    editor.putString("year", year.getText().toString());
+    editor.putString("color", color.getText().toString());
+    editor.putString("seats", seats.getText().toString());
+    editor.putString("price", price.getText().toString());
+    editor.apply();
+  }
+
+  @Override
   protected void onStart() {
     super.onStart();
     SharedPreferences sharedPreferences = getPreferences(0);
@@ -196,12 +217,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
       if (!price.getText().toString().equals("")) {
-        if (distanceX < 0) {
-          price.setText(
-              Float.toString(Math.abs(distanceX) + Float.parseFloat(price.getText().toString())));
-        }
-        if (distanceX > 0) {
-          price.setText(Float.toString(Float.parseFloat(price.getText().toString()) - distanceX));
+        float diffY = e2.getY() - e1.getY();
+        float diffX = e2.getX() - e1.getX();
+        if (Math.abs(diffX) > Math.abs(diffY) && diffX > 0 && diffY < 40) {
+          if (Float.parseFloat(price.getText().toString()) + distanceX < 5000)
+            price.setText(
+                Float.toString(Math.abs(distanceX) + Float.parseFloat(price.getText().toString())));
+          else {
+            price.setText("5000");
+          }
+        } else if (Math.abs(diffX) > Math.abs(diffY) && diffY < 40 && diffX < 0) {
+          if (Float.parseFloat(price.getText().toString()) + distanceX > 0)
+            price.setText(Float.toString(Float.parseFloat(price.getText().toString()) - distanceX));
+          else {
+            price.setText("0");
+          }
         }
       }
       return super.onScroll(e1, e2, distanceX, distanceY);
@@ -214,7 +244,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-      moveTaskToBack(true);
+      float diffY = e2.getY() - e1.getY();
+      float diffX = e2.getX() - e1.getX();
+      if ((velocityX > 300 && (diffX > 100 || diffX < -100))
+          || (velocityY > 300 && (diffY > 100 || diffY < -100))) {
+        moveTaskToBack(true);
+      }
       return super.onFling(e1, e2, velocityX, velocityY);
     }
   }
