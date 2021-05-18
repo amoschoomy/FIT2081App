@@ -219,16 +219,25 @@ public class MainActivity extends AppCompatActivity {
       if (!price.getText().toString().equals("")) {
         float diffY = e2.getY() - e1.getY();
         float diffX = e2.getX() - e1.getX();
+
+        // left to right
         if (Math.abs(diffX) > Math.abs(diffY) && diffX > 0 && diffY < 40) {
           if (Float.parseFloat(price.getText().toString()) + distanceX < 5000)
             price.setText(
-                Float.toString(Math.abs(distanceX) + Float.parseFloat(price.getText().toString())));
+                Float.toString(
+                    Math.min(
+                        5000, Math.abs(distanceX) + Float.parseFloat(price.getText().toString()))));
           else {
             price.setText("5000");
           }
-        } else if (Math.abs(diffX) > Math.abs(diffY) && diffY < 40 && diffX < 0) {
+
+        }
+        // right to left
+        else if (Math.abs(diffX) > Math.abs(diffY) && diffY < 40 && diffX < 0) {
           if (Float.parseFloat(price.getText().toString()) + distanceX > 0)
-            price.setText(Float.toString(Float.parseFloat(price.getText().toString()) - distanceX));
+            price.setText(
+                Float.toString(
+                    Math.max(0, Float.parseFloat(price.getText().toString()) - distanceX)));
           else {
             price.setText("0");
           }
